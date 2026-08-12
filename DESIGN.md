@@ -170,3 +170,25 @@ namespace firefly {
 	}
 }
 ```
+
+MCFunction commands
+```py
+namespace firefly {
+	function load() {
+		# Let's say we define a board called weather...
+		board weather
+
+		# How do we use the normal Minecraft weather command now?
+		# This will cause a syntax error...
+		weather set clear
+		
+		# Just in case, you can preface your command with a /
+		# No syntax error!
+		/weather set clear
+
+		# It can also be used to output whatever you'd like to the
+		# generated MCF - like in Zoglin.
+		/# This command will be in the final generated file.
+		/and this is just invalid MCF, but will be inserted anyway.
+	}
+}
