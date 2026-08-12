@@ -1,7 +1,8 @@
-use std::fs::{create_dir, File};
+use std::fs::{create_dir, File, exists, read_dir};
 use std::io;
 use std::io::Write;
 use clap::ValueEnum;
+use std::process::exit;
 
 #[derive(Debug,Clone,ValueEnum)]
 pub enum Templates {
@@ -10,7 +11,7 @@ pub enum Templates {
 }
 
 pub fn init(name: String, template: Templates) -> io::Result<()> {
-    if fs::exists(&name)? && fs::read_dir(&name)?.next().is_some() {
+    if exists(&name)? && read_dir(&name)?.next().is_some() {
         println!("Error initializing: folder is not empty!");
         exit(65) // Run cat /usr/include/sysexits.h on your system. EX_DATAERR.
     }
