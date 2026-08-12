@@ -30,7 +30,9 @@ fn main() {
 
     match args.command {
         Subcommands::Init { name, template } => {
-            commands::init::init(name,template);
+            if let Err(e) = commands::init::init(name,template) {
+                eprintln!("Error: {}", e);
+            }
         }
         Subcommands::Build => {
             todo!("Build subcommand");
