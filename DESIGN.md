@@ -188,7 +188,7 @@ namespace firefly {
 
 		# It can also be used to output whatever you'd like to the
 		# generated MCF - like in Zoglin.
-		/# This command will be in the final generated file.
+		/# This comment will be in the final generated file.
 		/and this is just invalid MCF, but will be inserted anyway.
 
 		# Additionally, like Zoglin, you can preface multiple lines
