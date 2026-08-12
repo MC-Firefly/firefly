@@ -108,6 +108,22 @@ namespace firefly {
 }
 ```
 
+Repeats
+
+```py
+namespace firefly {
+	function reallyBadFunction() {
+		board myBoard
+		myBoard[$rep] = 0
+
+		repeat i in 1..100 {
+			say $(i)
+			myBoard[$rep] += 1
+		}
+	}
+}
+```
+
 Execute as, and at
 
 ```py
