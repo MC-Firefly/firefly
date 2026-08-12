@@ -190,5 +190,19 @@ namespace firefly {
 		# generated MCF - like in Zoglin.
 		/# This command will be in the final generated file.
 		/and this is just invalid MCF, but will be inserted anyway.
+
+		# Additionally, like Zoglin, you can preface multiple lines
+		# with this syntax:
+
+		/-
+		weather set clear
+		execute if score $sad weather matches 1 run weather set rain
+		-/
+
+		# However, you cannot use compile-time substitutions, as this
+		# is inserted directly into the MCF.
+		# Generally, Minecraft commands will not be overwritten by the
+		# default Firefly keywords, so you shouldn't need to use this
+		# syntax too much.
 	}
 }
