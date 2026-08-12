@@ -31,6 +31,7 @@ namespace minecraft {
 Multiple files
 
 ```py
+# tick.ff
 namespace firefly {
 	function tick() {
 		:timers[$timer] += 1
@@ -39,6 +40,7 @@ namespace firefly {
 ```
 
 ```py
+# load.ff
 namespace firefly {
 	function load() {
 		board :timers
@@ -48,6 +50,7 @@ namespace firefly {
 ```
 
 ```py
+# tags.ff
 namespace minecraft {
 	tag functions {
 		load {
@@ -59,7 +62,7 @@ namespace minecraft {
 		}
 	}
 }
-```
+```                                                                                                     
 
 Switch cases
 
@@ -115,6 +118,55 @@ namespace firefly {
 				say Touching grass
 			}
 		}
+	}
+}
+```
+
+Compile-time variables
+```py
+# Compile-time variables are special as they can be
+# defined anywhere in a file, and used at any point
+# after. Compile-time variables start with a * and
+# can be used as such:
+*PI_1000 = 3141
+
+namespace firefly {
+	function load() {
+		# Note that as we exclude the : this scoreboard is just called consts.
+		board consts
+		consts[$pi] = *{PI_1000}
+		tellraw @a {"score":{"name":"$pi","objective":"consts"}}
+	}
+
+	function enter_pi(arg) {
+		# Again, just called temp
+		board temp
+		temp[$possibly_pi] = $(arg)
+
+		if temp[$possibly_pi] matches *{PI_1000} {
+			say You know what pi*1000 is!
+		}
+	}
+}
+```
+
+Compile-time substitutions
+```py
+# You can use compile-time substitutions to reference
+# functions, scoreboards and more in a more Firefly-like
+# fashion, and without worrying about namespaces.
+# Function substitutions are wrapped in the format of &{}.
+# Scoreboard substitutions are wrapped in the format of &().
+
+namespace firefly {
+	function hello(name) {
+		say Hello, $(name)!
+	}
+	function load() {
+		board :myImportantBoard
+		scoreboard players set joe &(:myImportantBoard) 1
+
+		function &{:hello} {"name":"world"}
 	}
 }
 ```
