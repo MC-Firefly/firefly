@@ -1,5 +1,5 @@
 use std::fs::{create_dir, File, exists, read_dir};
-use std::io::{self};
+use std::io;
 use std::io::Write;
 use clap::ValueEnum;
 use std::process::exit;
@@ -10,7 +10,7 @@ pub enum Templates {
     HelloWorld
 }
 
-pub fn init(name: String, template: Templates) -> io::Result<()> {
+pub fn init(name: String, template: Templates) -> anyhow::Result<()> {
     if exists(&name)? && read_dir(&name)?.next().is_some() {
         println!("Error initializing: folder is not empty!");
         exit(65) // Run cat /usr/include/sysexits.h on your system. EX_DATAERR.
@@ -21,30 +21,18 @@ pub fn init(name: String, template: Templates) -> io::Result<()> {
     create_dir(&name)?;
     create_dir(format!("{name}/src"))?;
 
-    File::create(format!("{name}/config.toml"))?;
-    
+    let mut config = File::create(format!("{name}/firefly.toml"))?;
+    config.write(toml::to_string(&crate::Config::default())?.as_bytes())?;
+
     match template {
         Templates::Empty => {
             File::create(format!("{name}/src/main.ff"))?;
         }
         Templates::HelloWorld => {
-            let mut template = File::create(format!("{name}/src/main.ff"))?;
-            template.write_all(
-br#"namespace code {
-    function load() {
-        tellraw @a "Hello, World!"
-    }
-}
-
-namespace minecraft {
-    tag functions {
-        load {
-            code:load
+            let mut template = File::create(format!("{name}/src/main.rs"))?;
+            template.write_all(include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/templates/HelloWorld.ff")))?;
         }
     }
-}"#)?; // This code looks ass and it is ass but shut up
-        }
-    }
-
+    
     Ok(())
 }

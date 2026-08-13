@@ -1,4 +1,6 @@
 use clap::{Parser,Subcommand};
+use serde::{Deserialize, Serialize};
+
 mod commands;
 
 #[derive(Subcommand)]
@@ -19,10 +21,19 @@ struct Cli {
     command: Subcommands
 }
 
-static VERSION_MAJOR: &str = "0";
-static VERSION_MINOR: &str = "0";
-static VERSION_PATCH: &str = "1";
-static VERSION_ADDENDUM: &str = "-infdev";
+#[derive(Deserialize,Serialize)]
+pub struct Config<'a> {
+    default_namespace: &'a str,
+    target_version: &'a str,
+}
+
+impl Default for Config<'_> {
+    fn default() -> Self {
+        Self { default_namespace: "firefly", target_version: "26.2" }
+    }
+}
+
+static VERSION: (u32, u32, u32, &str) = (0, 0, 1, "-infdev");
 
 
 fn main() {
@@ -35,10 +46,13 @@ fn main() {
             }
         }
         Subcommands::Build => {
-            todo!("Build subcommand");
+            if let Err(e) = commands::build::build() {
+                eprintln!("Error: {}", e);
+            }
         }
         Subcommands::Version => {
-            println!("Running Firefly v{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}{VERSION_ADDENDUM}");
+            let (major, minor, patch, suffix) = VERSION;
+            println!("Running Firefly v{}.{}.{}{}", major, minor, patch, suffix);
         }
     }
 }
