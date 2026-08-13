@@ -1,0 +1,13 @@
+namespace code
+# comment
+function load() {
+    tellraw @a "Hello World"
+}
+
+namespace minecraft {
+    tag functions {
+        load {
+            code:load
+        }
+    }
+}
