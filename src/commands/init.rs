@@ -1,5 +1,5 @@
 use std::fs::{create_dir, File, exists, read_dir};
-use std::io;
+use std::io::{self};
 use std::io::Write;
 use clap::ValueEnum;
 use std::process::exit;
@@ -22,11 +22,29 @@ pub fn init(name: String, template: Templates) -> io::Result<()> {
     create_dir(format!("{name}/src"))?;
 
     File::create(format!("{name}/config.toml"))?;
-
-    if matches!(template, Templates::HelloWorld) {
-        let mut template = File::create(format!("{name}/src/main.ff"))?;
-        template.write_all(br#"tellraw @a "Hello World!""#)?;
-    }
     
+    match template {
+        Templates::Empty => {
+            File::create(format!("{name}/src/main.ff"))?;
+        }
+        Templates::HelloWorld => {
+            let mut template = File::create(format!("{name}/src/main.ff"))?;
+            template.write_all(
+br#"namespace code {
+    function load() {
+        tellraw @a "Hello, World!"
+    }
+}
+
+namespace minecraft {
+    tag functions {
+        load {
+            code:load
+        }
+    }
+}"#)?; // This code looks ass and it is ass but shut up
+        }
+    }
+
     Ok(())
 }
