@@ -1,5 +1,4 @@
 use std::fs::{create_dir, File, exists, read_dir};
-use std::io;
 use std::io::Write;
 use clap::ValueEnum;
 use std::process::exit;
@@ -29,7 +28,7 @@ pub fn init(name: String, template: Templates) -> anyhow::Result<()> {
             File::create(format!("{name}/src/main.ff"))?;
         }
         Templates::HelloWorld => {
-            let mut template = File::create(format!("{name}/src/main.rs"))?;
+            let mut template = File::create(format!("{name}/src/main.ff"))?;
             template.write_all(include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/templates/HelloWorld.ff")))?;
         }
     }
